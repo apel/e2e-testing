@@ -5,7 +5,7 @@ import subprocess
 def run_test():
     start = datetime.now()
 
-    # Run certificate transfer to wlcg instance
+    # Run certificate transfer to wlcg (prod) instance
     command = "fts-rest-transfer-submit -s https://lcgfts01.gridpp.rl.ac.uk sourcefile destfile -o"
     result = subprocess.run(shlex.split(command), capture_output=True, text=True)
 
