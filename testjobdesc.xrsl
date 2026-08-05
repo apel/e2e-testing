@@ -1,0 +1,1 @@
+&(executable="/usr/bin/sleep")(arguments="20")(queue="EL9")(jobname="testjobdesc")(stdout="stdout")
