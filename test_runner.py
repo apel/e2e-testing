@@ -6,13 +6,23 @@ import subprocess
 import sys
 
 from tests.APEL.gridJobTest import run_test as grid_job_test
+from tests.FTS.certificate.skaTest import run_test as fts_cert_ska_test
+from tests.FTS.certificate.testTest import run_test as fts_cert_test_test
 from tests.FTS.certificate.wlcgTest import run_test as fts_cert_wlcg_test
+from tests.FTS.token.skaTest import run_test as fts_token_ska_test
+from tests.FTS.token.testTest import run_test as fts_token_test_test
+from tests.FTS.token.wlcgTest import run_test as fts_token_wlcg_test
 
 load_dotenv()
 
 tests = [
     grid_job_test,
-    fts_cert_wlcg_test
+    fts_cert_ska_test,
+    fts_cert_test_test,
+    fts_cert_wlcg_test,
+    fts_token_ska_test,
+    fts_token_test_test,
+    fts_token_wlcg_test
 ]
 
 results = []
