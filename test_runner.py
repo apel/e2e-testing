@@ -55,7 +55,7 @@ output = {
 }
 
 # append test results to log file
-with open("testlog.jsonl", "a") as f:
+with open("/var/log/fed-services-e2e/test_results_log.jsonl", "a") as f:
     json.dump(output, f)
     f.write("\n")
 
