@@ -1,5 +1,6 @@
 from datetime import datetime
 from dotenv import load_dotenv
+import json
 import os
 import shlex
 import subprocess
@@ -53,4 +54,9 @@ output = {
     "results": results
 }
 
-# Opensearch logic - to be implemented
+# append test results to log file
+with open("testlog.jsonl", "a") as f:
+    json.dump(output, f)
+    f.write("\n")
+
+# opensearch api ingestion logic
