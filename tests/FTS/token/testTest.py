@@ -4,11 +4,40 @@ import os
 import shlex
 import subprocess
 
+from resources.tokenGenerator import generate_token
+
 def run_test():
-    start = datetime.now()
+    # Prepare test_result dictionary, in case token generation fails
+    test_result = {
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "duration": 0,
+        "test": "fts token transfer test endpoint",
+        "command": "",
+        "status": "",
+        "return_code": "",
+        "output": "",
+        "error": "",
+    }
 
     load_dotenv()
-    token = os.getenv("ftstoken")
+
+    # Generate a token with iris params
+    token = generate_token(
+        token_endpoint="https://iris-iam.stfc.ac.uk/token",
+        client_id=os.getenv("irisClientId"),
+        client_secret=os.getenv("irisClientSecret")
+    )
+
+    # Check if token generation failed. If so return test_result dictionary before test exection,
+    # containing the token generation error message.
+    if not token or "OIDC" in token:
+        test_result["status"] = "FAIL"
+        test_result["output"] = "Failed to generate a token"
+        test_result["error"] = token
+        return test_result
+
+    # Token generation succeeded - attempt transfer
+    start = datetime.now()
 
     # Run token transfer to test instance
     command = f"fts-rest-transfer-submit --fts-access-token {token} --src-access-token {token} --dst-access-token {token} -s https://fts-test01.gridpp.rl.ac.uk sourcefile destfile -o"
@@ -16,15 +45,12 @@ def run_test():
 
     end = datetime.now()
 
-    test_result = {
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "duration": end - start,
-        "test": "fts token transfer test endpoint",
-        "command": command,
-        "status": "PASS" if result.returncode == 0 else "FAIL",
-        "return_code": result.returncode,
-        "output": result.stdout,
-        "error": result.stderr,
-    }
+    # Amend test result dictionary with correct test results
+    test_result["duration"] = end - start
+    test_result["command"] = command
+    test_result["status"] = "PASS" if result.returncode == 0 else "FAIL"
+    test_result["return_code"] = result.returncode
+    test_result["output"] = result.stdout
+    test_result["error"] = result.stderr
 
     return test_result
