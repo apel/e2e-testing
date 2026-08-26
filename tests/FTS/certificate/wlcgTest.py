@@ -13,7 +13,7 @@ def run_test():
 
     test_result = {
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "duration": end - start,
+        "duration": str(end - start),
         "test": "fts certificate transfer wlcg endpoint",
         "command": command,
         "status": "PASS" if result.returncode == 0 else "FAIL",

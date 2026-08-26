@@ -46,7 +46,7 @@ def run_test():
     end = datetime.now()
 
     # Amend test result dictionary with correct test results
-    test_result["duration"] = end - start
+    test_result["duration"] = str(end - start)
     test_result["command"] = command
     test_result["status"] = "PASS" if result.returncode == 0 else "FAIL"
     test_result["return_code"] = result.returncode
