@@ -40,7 +40,7 @@ def run_test():
     start = datetime.now()
 
     # Run token transfer to ska instance
-    command = f"fts-rest-transfer-submit --fts-access-token {token} --src-access-token {token} --dst-access-token {token} -s https://fts-ska01.scd.rl.ac.uk sourcefile destfile -o"
+    command = f"fts-rest-transfer-submit --fts-access-token {token} --src-access-token {token} --dst-access-token {token} -s https://fts3-ska.scd.rl.ac.uk sourcefile destfile -o"
     result = subprocess.run(shlex.split(command), capture_output=True, text=True)
 
     end = datetime.now()
