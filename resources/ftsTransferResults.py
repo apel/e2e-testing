@@ -52,7 +52,7 @@ def get_test_result(endpoint, jobID, token):
                 timeout=50
             )
 
-            if resp.json().get('job_state') != "SUBMITTED":
+            if resp.json().get('job_state') not in ("SUBMITTED", "ACTIVE"):
                 status = "complete"
 
         resp.raise_for_status()
@@ -61,8 +61,6 @@ def get_test_result(endpoint, jobID, token):
 
         totalInfo["jobState"] = jobInfo.get('job_state')
         totalInfo["jobInfo"] = jobInfo
-
-
 
     except requests.exceptions.RequestException as exc:
         totalInfo["error"] = "Error retrieving job result: {}".format(exc)
