@@ -4,6 +4,7 @@ import os
 import shlex
 import subprocess
 
+from resources.ftsTransferResults import get_job_id, get_test_result
 from resources.tokenGenerator import generate_token
 
 def run_test():
@@ -45,6 +46,14 @@ def run_test():
 
     end = datetime.now()
 
+    jobID = get_job_id(result.stdout)
+    if jobID is not None:
+        checkTransfer = get_test_result(
+            endpoint="https://fts3-ska.scd.rl.ac.uk:8446",
+            jobID=jobID,
+            token=token
+        )
+
     # Amend test result dictionary with correct test results
     test_result["duration"] = str(end - start)
     test_result["command"] = command
@@ -52,5 +61,6 @@ def run_test():
     test_result["return_code"] = result.returncode
     test_result["output"] = result.stdout
     test_result["error"] = result.stderr
+    test_result["transfer_result"] = checkTransfer
 
     return test_result
