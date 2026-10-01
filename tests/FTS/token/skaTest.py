@@ -8,11 +8,10 @@ from resources.ftsTransferResults import get_job_id, get_test_result
 from resources.tokenGenerator import generate_token
 
 def run_test():
-    # Prepare test_result dictionary, in case token generation fails
-    test_result = {
+    # Prepare submissionResult dictionary, in case token generation fails
+    submissionResult = {
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "duration": 0,
-        "test": "fts token transfer ska endpoint",
         "command": "",
         "status": "",
         "return_code": "",
@@ -29,38 +28,48 @@ def run_test():
         client_secret=os.getenv("skaClientSecret")
     )
 
-    # Check if token generation failed. If so return test_result dictionary before test exection,
+    # Check if token generation failed. If so return submissionResult dictionary before test exection,
     # containing the token generation error message.
     if not token or "OIDC" in token:
-        test_result["status"] = "FAIL"
-        test_result["output"] = "Failed to generate a token"
-        test_result["error"] = token
-        return test_result
+        submissionResult["status"] = "FAIL"
+        submissionResult["output"] = "Failed to generate a token"
+        submissionResult["error"] = token
+        return submissionResult
+
+    endpoint = "https://fts-ska01.scd.rl.ac.uk:8446"
 
     # Token generation succeeded - attempt transfer
     start = datetime.now()
 
     # Run token transfer to ska instance
-    command = f"fts-rest-transfer-submit --fts-access-token {token} --src-access-token {token} --dst-access-token {token} -s https://fts3-ska.scd.rl.ac.uk:8446 sourcefile destfile -o"
+    command = f"fts-rest-transfer-submit --fts-access-token {token} --src-access-token {token} --dst-access-token {token} -s {endpoint} sourcefile destfile -o"
     result = subprocess.run(shlex.split(command), capture_output=True, text=True)
 
     end = datetime.now()
 
+    # Amend test result dictionary with correct test results
+    submissionResult["duration"] = str(end - start)
+    submissionResult["command"] = command
+    submissionResult["status"] = "PASS" if result.returncode == 0 else "FAIL"
+    submissionResult["return_code"] = result.returncode
+    submissionResult["output"] = result.stdout
+    submissionResult["error"] = result.stderr
+
+    # Dictionary containting information to return
+    retDict = {
+        "test": "fts token transfer ska endpoint",
+        "submission": submissionResult
+    }
+
+    # If submission succeeded, retrieve the result of the transfer and return that as well
     jobID = get_job_id(result.stdout)
     if jobID is not None:
-        checkTransfer = get_test_result(
-            endpoint="https://fts3-ska.scd.rl.ac.uk:8446",
+        transferResult = get_test_result(
+            endpoint=endpoint,
             jobID=jobID,
             token=token
         )
 
-    # Amend test result dictionary with correct test results
-    test_result["duration"] = str(end - start)
-    test_result["command"] = command
-    test_result["status"] = "PASS" if result.returncode == 0 else "FAIL"
-    test_result["return_code"] = result.returncode
-    test_result["output"] = result.stdout
-    test_result["error"] = result.stderr
-    test_result["transfer_result"] = checkTransfer
+        retDict["transfer"] = transferResult
 
-    return test_result
+    return retDict

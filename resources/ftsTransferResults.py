@@ -7,6 +7,7 @@ transfers or nothing for certificate.
 """
 
 import requests
+import time
 
 
 def get_job_id(output):
@@ -38,14 +39,21 @@ def get_test_result(endpoint, jobID, token):
     # Define returned dict
     totalInfo = {}
 
-    # Attempt to get test result
+    # Attempt to get test result. wait until transfer has succeeded or failed.
     try:
-        resp = requests.get(
-            f"{endpoint}/jobs/{jobID}",
-            headers=headers,
-            verify=True,
-            timeout=50
-        )
+        status = "submitted"
+        while status == "submitted":
+            # Wait 5s to give transfer time to change state
+            time.sleep(5)
+            resp = requests.get(
+                f"{endpoint}/jobs/{jobID}",
+                headers=headers,
+                verify=True,
+                timeout=50
+            )
+
+            if resp.json().get('job_state') != "SUBMITTED":
+                status = "complete"
 
         resp.raise_for_status()
 
@@ -53,6 +61,8 @@ def get_test_result(endpoint, jobID, token):
 
         totalInfo["jobState"] = jobInfo.get('job_state')
         totalInfo["jobInfo"] = jobInfo
+
+
 
     except requests.exceptions.RequestException as exc:
         totalInfo["error"] = "Error retrieving job result: {}".format(exc)
