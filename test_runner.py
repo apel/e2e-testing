@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 import json
 import os
@@ -50,7 +50,7 @@ for test in tests:
 
 # create test output from results list
 output = {
-    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
     "results": results
 }
 

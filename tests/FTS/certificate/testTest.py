@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 import os
 import shlex
@@ -19,7 +19,7 @@ def run_test():
     end = datetime.now()
 
     submissionResult = {
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
         "duration": str(end - start),
         "command": command,
         "status": "PASS" if result.returncode == 0 else "FAIL",

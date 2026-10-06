@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import shlex
 import subprocess
 
@@ -12,7 +12,7 @@ def run_test():
     end = datetime.now()
 
     test_result = {
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
         "duration": str(end - start),
         "test": "apel grid job",
         "command": command,

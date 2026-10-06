@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 import os
 import shlex
@@ -10,7 +10,7 @@ from resources.tokenGenerator import generate_token
 def run_test():
     # Prepare submissionResult dictionary, in case token generation fails
     submissionResult = {
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
         "duration": 0,
         "command": "",
         "status": "",
