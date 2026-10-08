@@ -36,7 +36,7 @@ def run_test():
         submissionResult["error"] = token
         return submissionResult
 
-    endpoint = "https://fts3-test.gridpp.rl.ac.uk:8446"
+    endpoint = "https://fts-test03.gridpp.rl.ac.uk:8446/"
 
     # Token generation succeeded - attempt transfer
     start = datetime.now()

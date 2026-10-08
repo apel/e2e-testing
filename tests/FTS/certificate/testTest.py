@@ -8,7 +8,7 @@ from resources.ftsTransferResults import get_job_id, get_test_result
 from resources.tokenGenerator import generate_token
 
 def run_test():
-    endpoint = "https://fts3-test.gridpp.rl.ac.uk:8446"
+    endpoint = "https://fts-test03.gridpp.rl.ac.uk:8446/"
 
     start = datetime.now()
 

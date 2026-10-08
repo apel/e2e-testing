@@ -21,7 +21,7 @@ def get_test_result(endpoint, jobID, token):
     # type: (str, str, str) -> dict
     """Retrieve FTS transfer results.
     Does a get on both the jobID and then its files, returning both.
-    
+
     Args:
         endpoint (str): HTTPS URL of the token endpoint
         jobID (str): the id of the job to check
@@ -39,21 +39,34 @@ def get_test_result(endpoint, jobID, token):
     # Define returned dict
     totalInfo = {}
 
-    # Attempt to get test result. wait until transfer has succeeded or failed.
+    # Attempt to get test result.
+    # Wait until the transfer has succeeded/failed or until 20 minutes has passed.
     try:
-        status = "submitted"
-        while status == "submitted":
-            # Wait 5s to give transfer time to change state
+        timeout = 1200 # 20 minutes
+        start = time.time()
+
+        while True:
+            # Wait 5s to give transfer time to change state.
             time.sleep(5)
+
+            # Attempt to get transfer result.
+            # Currently verify needs to be false or the request always fails.
             resp = requests.get(
                 f"{endpoint}/jobs/{jobID}",
                 headers=headers,
-                verify=True,
+                verify=False,
                 timeout=50
             )
 
+            # If the transfer does not have submitted or active state, it has either succeeded or failed.
+            # So the information is useful and can be returned.
             if resp.json().get('job_state') not in ("SUBMITTED", "ACTIVE"):
-                status = "complete"
+                break
+
+            # If it has been 20 minutes since the start, timeout the retrieval to prevent eternal hanging.
+            if time.time() - start >= timeout:
+                totalInfo["error"] = "Error retrieving job result: timed out after 20 minutes"
+                return totalInfo
 
         resp.raise_for_status()
 
@@ -66,7 +79,8 @@ def get_test_result(endpoint, jobID, token):
         totalInfo["error"] = "Error retrieving job result: {}".format(exc)
         return totalInfo
 
-    # attempt to get individual file result
+    # Attempt to get individual file result.
+    # Currently verify needs to be false or the request always fails.
     try:
         resp = requests.get(
             f"{endpoint}/jobs/{jobID}/files",
@@ -77,6 +91,7 @@ def get_test_result(endpoint, jobID, token):
 
         resp.raise_for_status()
 
+        # Create a list to contain the state of all files transferred.
         state = []
 
         for file in resp.json():
