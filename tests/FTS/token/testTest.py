@@ -1,8 +1,9 @@
 from datetime import datetime, timezone
-from dotenv import load_dotenv
 import os
 import shlex
 import subprocess
+
+from dotenv import load_dotenv
 
 from resources.ftsTransferResults import get_job_id, get_test_result
 from resources.tokenGenerator import generate_token
