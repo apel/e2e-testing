@@ -1,10 +1,10 @@
 from datetime import datetime, timezone
-from dotenv import load_dotenv
 import json
 import os
 import shlex
 import subprocess
-import sys
+
+from dotenv import load_dotenv
 
 from tests.APEL.gridJobTest import run_test as grid_job_test
 from tests.FTS.certificate.skaTest import run_test as fts_cert_ska_test
@@ -28,7 +28,7 @@ tests = [
 
 results = []
 
-# voms proxy creation
+# Create the voms proxy required for grid jobs and FTS certificate transfers.
 command = "voms-proxy-init --voms dteam"
 vomsProxyPassword = os.getenv("vomsproxypassword")
 
@@ -39,24 +39,23 @@ result = subprocess.run(
     text=True
 )
 
-# exit program if proxy creation fails, as all tests will fail because of it
+# If the VOMS proxy creation fails, append an error message to the test results list.
 if result.returncode != 0:
-    print(result.stdout + result.stderr)
-    sys.exit()
+    results.append(result.stdout + result.stderr)
 
 # run all tests and append results to list
 for test in tests:
     results.append(test())
 
-# create test output from results list
+# Create the output dictionary from the list of test results.
 output = {
     "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
     "results": results
 }
 
-# append test results to log file
+# Append the output dictionary to the test results log file.
+# jsonl is used over json so that the Filebeat parser for OpenSearch can consider each line
+# of the log file as a different log entry, removing the need for multi-line parsing.
 with open("/var/log/fed-services-e2e/test_results_log.jsonl", "a") as f:
     json.dump(output, f)
     f.write("\n")
-
-# opensearch api ingestion logic
