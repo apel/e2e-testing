@@ -46,7 +46,14 @@ def run_test():
 
     # Run token transfer to ska instance.
     # By using -o flag (overwrite file), we can always use the same source and destination files.
-    command = f"fts-rest-transfer-submit --fts-access-token {token} --src-access-token {token} --dst-access-token {token} -s {endpoint} {sourceFile} {destFile} -o"
+    command = (
+        f"fts-rest-transfer-submit "
+        f"--fts-access-token {token} "
+        f"--src-access-token {token} "
+        f"--dst-access-token {token} "
+        f"-s {endpoint} "
+        f"{sourceFile} {destFile} -o"
+    )
     result = subprocess.run(shlex.split(command), capture_output=True, text=True)
 
     end = datetime.now()
