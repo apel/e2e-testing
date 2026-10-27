@@ -38,12 +38,15 @@ def run_test():
         return submissionResult
 
     endpoint = "https://fts-test03.gridpp.rl.ac.uk:8446/"
+    sourceFile = "davs://xrootd.echo.stfc.ac.uk:1094/ssd_ec_test:dteam/fts_e2e_tests/rowane2etest.txt"
+    destFile = "davs://cephc04.gla.scotgrid.ac.uk:1094/dteam:/dteam/fts_e2e_tests/rowane2etest.txt"
 
     # Token generation succeeded - attempt transfer
     start = datetime.now()
 
-    # Run token transfer to ska instance
-    command = f"fts-rest-transfer-submit --fts-access-token {token} --src-access-token {token} --dst-access-token {token} -s {endpoint} sourcefile destfile -o"
+    # Run token transfer to test instance.
+    # By using -o flag (overwrite file), we can always use the same source and destination files.
+    command = f"fts-rest-transfer-submit --fts-access-token {token} --src-access-token {token} --dst-access-token {token} -s {endpoint} {sourceFile} {destFile} -o"
     result = subprocess.run(shlex.split(command), capture_output=True, text=True)
 
     end = datetime.now()

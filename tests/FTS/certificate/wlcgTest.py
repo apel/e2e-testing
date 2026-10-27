@@ -10,11 +10,14 @@ from resources.tokenGenerator import generate_token
 
 def run_test():
     endpoint = "https://lcgfts01.gridpp.rl.ac.uk:8446"
+    sourceFile = "davs://xrootd.echo.stfc.ac.uk:1094/ssd_ec_test:dteam/fts_e2e_tests/rowane2etest.txt"
+    destFile = "davs://cephc04.gla.scotgrid.ac.uk:1094/dteam:/dteam/fts_e2e_tests/rowane2etest.txt"
 
     start = datetime.now()
 
-    # Run certificate transfer to wlcg (prod) instance
-    command = f"fts-rest-transfer-submit -s {endpoint} sourcefile destfile -o"
+    # Run certificate transfer to wlcg (prod) instance.
+    # By using -o flag (overwrite file), we can always use the same source and destination files.
+    command = f"fts-rest-transfer-submit -s {endpoint} {sourceFile} {destFile} -o"
     result = subprocess.run(shlex.split(command), capture_output=True, text=True)
 
     end = datetime.now()

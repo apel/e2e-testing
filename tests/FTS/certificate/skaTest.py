@@ -10,11 +10,14 @@ from resources.tokenGenerator import generate_token
 
 def run_test():
     endpoint = "https://fts3-ska.scd.rl.ac.uk:8446"
+    sourceFile = "davs://xrootd-01.swesrc.chalmers.se:1094/data/src/ops_tests/service_tests/rowane2etest.txt"
+    destFile = "davs://rucio.espsrc.iaa.csic.es:443/disk/ops_tests/service_tests/rowane2etest.txt"
 
     start = datetime.now()
 
-    # Run certificate transfer to ska instance
-    command = f"fts-rest-transfer-submit -s {endpoint} sourcefile destfile -o"
+    # Run certificate transfer to ska instance.
+    # By using -o flag (overwrite file), we can always use the same source and destination files.
+    command = f"fts-rest-transfer-submit -s {endpoint} {sourceFile} {destFile} -o"
     result = subprocess.run(shlex.split(command), capture_output=True, text=True)
 
     end = datetime.now()
