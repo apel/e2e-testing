@@ -25,7 +25,6 @@ def run_test():
     submissionResult = {
         "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
         "duration": str(end - start),
-        "command": command,
         "status": "PASS" if result.returncode == 0 else "FAIL",
         "return_code": result.returncode,
         "output": result.stdout,

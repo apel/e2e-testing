@@ -13,7 +13,6 @@ def run_test():
     submissionResult = {
         "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
         "duration": 0,
-        "command": "",
         "status": "",
         "return_code": "",
         "output": "",
@@ -60,7 +59,6 @@ def run_test():
 
     # Amend test result dictionary with correct test results
     submissionResult["duration"] = str(end - start)
-    submissionResult["command"] = command
     submissionResult["status"] = "PASS" if result.returncode == 0 else "FAIL"
     submissionResult["return_code"] = result.returncode
     submissionResult["output"] = result.stdout
