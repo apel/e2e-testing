@@ -26,8 +26,8 @@ def generate_token(token_endpoint, client_id, client_secret):
         "grant_type": "client_credentials",
         "client_id": client_id,
         "client_secret": client_secret,
-        "scope": "openid profile offline_access wlcg wlcg.groups storage.read:/ storage.write:/ storage.modify:/",
-        "audience": "https://wlcg.cern.ch/jwt/v1/any"
+        "scope": "openid profile wlcg.groups storage.read:/ storage.modify:/",
+        "audience": "fts https://wlcg.cern.ch/jwt/v1/any"
     }
 
     # Attempt to retrieve token

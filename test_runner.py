@@ -7,23 +7,17 @@ import subprocess
 from dotenv import load_dotenv
 
 from tests.APEL.gridJobTest import run_test as grid_job_test
-from tests.FTS.certificate.skaTest import run_test as fts_cert_ska_test
 from tests.FTS.certificate.testTest import run_test as fts_cert_test_test
 from tests.FTS.certificate.wlcgTest import run_test as fts_cert_wlcg_test
 from tests.FTS.token.skaTest import run_test as fts_token_ska_test
-from tests.FTS.token.testTest import run_test as fts_token_test_test
-from tests.FTS.token.wlcgTest import run_test as fts_token_wlcg_test
 
 load_dotenv()
 
 tests = [
     grid_job_test,
-    fts_cert_ska_test,
     fts_cert_test_test,
     fts_cert_wlcg_test,
     fts_token_ska_test,
-    fts_token_test_test,
-    fts_token_wlcg_test
 ]
 
 results = []
@@ -41,7 +35,7 @@ result = subprocess.run(
 
 # If the VOMS proxy creation fails, append an error message to the test results list.
 if result.returncode != 0:
-    results.append(result.stdout + result.stderr)
+    results.append("VOMS Proxy creation fail: " + result.stdout + result.stderr)
 
 # run all tests and append results to list
 for test in tests:

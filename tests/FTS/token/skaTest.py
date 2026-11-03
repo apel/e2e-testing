@@ -13,7 +13,6 @@ def run_test():
     submissionResult = {
         "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
         "duration": 0,
-        "command": "",
         "status": "",
         "return_code": "",
         "output": "",
@@ -38,19 +37,28 @@ def run_test():
         return submissionResult
 
     endpoint = "https://fts-ska01.scd.rl.ac.uk:8446"
+    sourceFile = "davs://xrootd-01.swesrc.chalmers.se:1094/data/src/ops_tests/service_tests/rowane2etest.txt"
+    destFile = "davs://rucio.espsrc.iaa.csic.es:443/disk/ops_tests/service_tests/rowane2etest.txt"
 
     # Token generation succeeded - attempt transfer
     start = datetime.now()
 
-    # Run token transfer to ska instance
-    command = f"fts-rest-transfer-submit --fts-access-token {token} --src-access-token {token} --dst-access-token {token} -s {endpoint} sourcefile destfile -o"
+    # Run token transfer to ska instance.
+    # By using -o flag (overwrite file), we can always use the same source and destination files.
+    command = (
+        f"fts-rest-transfer-submit "
+        f"--fts-access-token {token} "
+        f"--src-access-token {token} "
+        f"--dst-access-token {token} "
+        f"-s {endpoint} "
+        f"{sourceFile} {destFile} -o"
+    )
     result = subprocess.run(shlex.split(command), capture_output=True, text=True)
 
     end = datetime.now()
 
     # Amend test result dictionary with correct test results
     submissionResult["duration"] = str(end - start)
-    submissionResult["command"] = command
     submissionResult["status"] = "PASS" if result.returncode == 0 else "FAIL"
     submissionResult["return_code"] = result.returncode
     submissionResult["output"] = result.stdout

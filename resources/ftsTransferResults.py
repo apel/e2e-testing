@@ -6,6 +6,7 @@ Performs two GET requests to an FTS endpoint, using the token for token
 transfers or nothing for certificate.
 """
 
+from datetime import datetime
 import requests
 import time
 
@@ -74,6 +75,11 @@ def get_test_result(endpoint, jobID, token):
 
         totalInfo["jobState"] = jobInfo.get('job_state')
         totalInfo["jobInfo"] = jobInfo
+
+        submitTime = datetime.fromisoformat(jobInfo.get('submit_time'))
+        finishTime = datetime.fromisoformat(jobInfo.get('job_finished'))
+        delta = finishTime - submitTime
+        totalInfo["transferDuration"] = str(delta)
 
     except requests.exceptions.RequestException as exc:
         totalInfo["error"] = "Error retrieving job result: {}".format(exc)
