@@ -2,8 +2,7 @@
 Retrieve the results of FTS transfers.
 Also has a method to retrieve just the jobID from a string.
 
-Performs two GET requests to an FTS endpoint, using the token for token
-transfers or nothing for certificate.
+Performs two GET requests to an FTS endpoint, utilising a bearer token.
 """
 
 from datetime import datetime
@@ -26,7 +25,7 @@ def get_test_result(endpoint, jobID, token):
     Args:
         endpoint (str): HTTPS URL of the token endpoint
         jobID (str): the id of the job to check
-        token (str): optionally passed verification for token transfers
+        token (str): verification for retrieving transfers
 
     Returns:
         dict: Contains result response data or an error if request(s) failed.
