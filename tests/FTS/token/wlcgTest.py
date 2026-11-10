@@ -3,8 +3,6 @@ import os
 import shlex
 import subprocess
 
-from dotenv import load_dotenv
-
 from resources.ftsTransferResults import get_job_id, get_test_result
 from resources.tokenGenerator import generate_token
 
@@ -19,13 +17,11 @@ def run_test():
         "error": "",
     }
 
-    load_dotenv()
-
     # Call the token generator with iris params
     token = generate_token(
         token_endpoint="https://iris-iam.stfc.ac.uk/token",
-        client_id=os.getenv("irisClientId"),
-        client_secret=os.getenv("irisClientSecret")
+        client_id=os.environ["irisClientId"],
+        client_secret=os.environ["irisClientSecret"]
     )
 
     # Check if token generation failed. If so return submissionResult dictionary before test exection,

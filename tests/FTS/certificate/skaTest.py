@@ -3,8 +3,6 @@ import os
 import shlex
 import subprocess
 
-from dotenv import load_dotenv
-
 from resources.ftsTransferResults import get_job_id, get_test_result
 from resources.tokenGenerator import generate_token
 
@@ -38,12 +36,10 @@ def run_test():
     }
 
     # Generate a token to check transfer status
-    load_dotenv()
-
     token = generate_token(
         token_endpoint="https://ska-iam.stfc.ac.uk/token",
-        client_id=os.getenv("skaClientId"),
-        client_secret=os.getenv("skaClientSecret")
+        client_id=os.environ["skaClientId"],
+        client_secret=os.environ["skaClientSecret"]
     )
 
     # Check if token generation failed.

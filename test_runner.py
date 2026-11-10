@@ -4,14 +4,10 @@ import os
 import shlex
 import subprocess
 
-from dotenv import load_dotenv
-
 from tests.APEL.gridJobTest import run_test as grid_job_test
 from tests.FTS.certificate.testTest import run_test as fts_cert_test_test
 from tests.FTS.certificate.wlcgTest import run_test as fts_cert_wlcg_test
 from tests.FTS.token.skaTest import run_test as fts_token_ska_test
-
-load_dotenv()
 
 tests = [
     grid_job_test,
@@ -24,7 +20,7 @@ results = []
 
 # Create the voms proxy required for grid jobs and FTS certificate transfers.
 command = "voms-proxy-init --voms dteam"
-vomsProxyPassword = os.getenv("vomsproxypassword")
+vomsProxyPassword = os.environ["vomsproxypassword"]
 
 result = subprocess.run(
     shlex.split(command),

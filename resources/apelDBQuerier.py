@@ -7,16 +7,13 @@ from datetime import datetime, timezone
 import json
 import os
 
-from dotenv import load_dotenv
 import mysql.connector
 
-load_dotenv()
-
 connection = mysql.connector.connect(
-    host=os.getenv("dbHost"),
-    user=os.getenv("dbUser"),
-    password=os.getenv("dbPassword"),
-    database=os.getenv("dbDatabase")
+    host=os.environ["dbHost"],
+    user=os.environ["dbUser"],
+    password=os.environ["dbPassword"],
+    database=os.environ["dbDatabase"]
 )
 
 month = datetime.now(timezone.utc).month
