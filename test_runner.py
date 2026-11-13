@@ -1,9 +1,9 @@
 from datetime import datetime, timezone
 import json
-import os
 import shlex
 import subprocess
 
+import settings
 from tests.APEL.gridJobTest import run_test as grid_job_test
 from tests.FTS.certificate.testTest import run_test as fts_cert_test_test
 from tests.FTS.certificate.wlcgTest import run_test as fts_cert_wlcg_test
@@ -20,7 +20,7 @@ results = []
 
 # Create the voms proxy required for grid jobs and FTS certificate transfers.
 command = "voms-proxy-init --voms dteam"
-vomsProxyPassword = os.environ["vomsproxypassword"]
+vomsProxyPassword = settings.VOMS_PROXY_PASSWORD
 
 result = subprocess.run(
     shlex.split(command),

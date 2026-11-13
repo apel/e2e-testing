@@ -1,10 +1,10 @@
 from datetime import datetime, timezone
-import os
 import shlex
 import subprocess
 
 from resources.ftsTransferResults import get_job_id, get_test_result
 from resources.tokenGenerator import generate_token
+import settings
 
 def run_test():
     # Prepare submissionResult dictionary, in case token generation fails
@@ -20,8 +20,8 @@ def run_test():
     # Generate a token with SKA params
     token = generate_token(
         token_endpoint="https://ska-iam.stfc.ac.uk/token",
-        client_id=os.environ["skaClientId"],
-        client_secret=os.environ["skaClientSecret"]
+        client_id=settings.SKA_CLIENT_ID,
+        client_secret=settings.SKA_CLIENT_SECRET
     )
 
     # Check if token generation failed. If so return submissionResult dictionary before test exection,

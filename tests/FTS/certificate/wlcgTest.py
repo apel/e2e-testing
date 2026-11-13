@@ -1,10 +1,10 @@
 from datetime import datetime, timezone
-import os
 import shlex
 import subprocess
 
 from resources.ftsTransferResults import get_job_id, get_test_result
 from resources.tokenGenerator import generate_token
+import settings
 
 def run_test():
     endpoint = "https://lcgfts01.gridpp.rl.ac.uk:8446"
@@ -38,8 +38,8 @@ def run_test():
     # Generate a token to check transfer status
     token = generate_token(
         token_endpoint="https://iris-iam.stfc.ac.uk/token",
-        client_id=os.environ["irisClientId"],
-        client_secret=os.environ["irisClientSecret"]
+        client_id=settings.IRIS_CLIENT_ID,
+        client_secret=settings.IRIS_CLIENT_SECRET
     )
 
     # Check if token generation failed.
