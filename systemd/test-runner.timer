@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Federating Services E2E tests daily
+
+[Timer]
+OnCalendar=daily
+Persistent=true # executes on startup any runs missed during e.g. downtime
+
+[Install]
+WantedBy=timers.target
