@@ -23,11 +23,6 @@ result = subprocess.run(
 # Create output dictionary
 output = {
     "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
-    "ftsCertTest": "",
-    "ftsCertWlcg": "",
-    "ftsTokenSka": "",
-    "apelGridJob": "",
-    "runningError": "",
 }
 
 # If the VOMS proxy creation fails, append an error message to the test results list.

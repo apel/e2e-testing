@@ -72,11 +72,21 @@ def get_test_result(endpoint, jobID, token):
 
         jobInfo = resp.json()
 
+        # Extract only useful information from jobInfo
         totalInfo["jobState"] = jobInfo.get('job_state')
-        totalInfo["jobInfo"] = jobInfo
+        totalInfo["httpStatus"] = jobInfo.get('http_status')
+        totalInfo["submitTime"] = jobInfo.get('submit_time')
+        totalInfo["finishTime"] = jobInfo.get('job_finished')
+        totalInfo["jobId"] = jobInfo.get('job_id')
+        totalInfo["source"] = jobInfo.get('source_se')
+        totalInfo["dest"] = jobInfo.get('dest_se')
+        totalInfo["voName"] = jobInfo.get('vo_name')
+        totalInfo["submitHost"] = jobInfo.get('submit_host')
+        totalInfo["reason"] = jobInfo.get('reason')
+        totalInfo["cancelJob"] = jobInfo.get('cancel_job')
 
-        submitTime = datetime.fromisoformat(jobInfo.get('submit_time'))
-        finishTime = datetime.fromisoformat(jobInfo.get('job_finished'))
+        submitTime = datetime.fromisoformat(totalInfo["submitTime"])
+        finishTime = datetime.fromisoformat(totalInfo["finishTime"])
         delta = finishTime - submitTime
         totalInfo["transferDuration"] = str(delta)
 
