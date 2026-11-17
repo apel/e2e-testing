@@ -5,18 +5,16 @@ Write the query result into a log file that can be parsed by filebeat and sent t
 
 from datetime import datetime, timezone
 import json
-import os
 
-from dotenv import load_dotenv
 import mysql.connector
 
-load_dotenv()
+import settings
 
 connection = mysql.connector.connect(
-    host=os.getenv("dbHost"),
-    user=os.getenv("dbUser"),
-    password=os.getenv("dbPassword"),
-    database=os.getenv("dbDatabase")
+    host=settings.DB_HOST,
+    user=settings.DB_USER,
+    password=settings.DB_PASSWORD,
+    database=settings.DB_DATABASE
 )
 
 month = datetime.now(timezone.utc).month

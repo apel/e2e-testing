@@ -1,0 +1,9 @@
+[Unit]
+Description=E2E Test Runner
+After=network.target
+
+[Service]
+Type=oneshot # runs once and exits
+User=e2etestuser
+WorkingDirectory=/user/share/e2e-testing
+ExecStart=/usr/share/e2e-testing/scripts/run_e2etests.sh
